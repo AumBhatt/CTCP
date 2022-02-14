@@ -6,20 +6,20 @@ int main() {
     int port = 3000;
     char *message = "Hi from CTCP Client!!!";
     
-    int socketStatus = openTCPSocket(ip, port);
+    int socketStatus = openCTCPSocket(ip, port, 0);
     if(socketStatus < 0) {
         return -1;
     }
 
-    int sendStatus = sendTCPSocket(message);
+    int sendStatus = sendCTCPSocket(message, 0);
     if(sendStatus < 0) {
         return -1;
     }
 
-    char *response = recvTCPSocket();
+    char *response = recvCTCPSocket(0);
     printf("\n%s\n", response);
 
-    closeTCPSocket();
+    closeCTCPSocket();
     
     return 0;
 }

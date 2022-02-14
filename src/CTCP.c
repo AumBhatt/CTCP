@@ -1,9 +1,8 @@
 #include <CTCP.h>
 
-int socket_desc = socket(AF_INET, SOCK_STREAM, 0);
-struct sockaddr_in server_addr;
+socket_desc = socket(AF_INET, SOCK_STREAM, 0);
 
-int openCTCPSocket(char *ip, int port, bool enableMessages) {
+int openCTCPSocket(char *ip, int port, int enableMessages) {
     char *connFailed = "\nTCPClient error: Connection Failed: Could not connect to server.";
     
     server_addr.sin_family = AF_INET;
@@ -18,18 +17,19 @@ int openCTCPSocket(char *ip, int port, bool enableMessages) {
 
     if(connectResult == -1) {
         // Socket Connection Failed :(
-        printf(connFailed);
+        if(enableMessages) printf(connFailed);
+        return -1;
     }
-    printf("\nTCPClient: Connected to Server...");
+    if(enableMessages) printf("\nTCPClient: Connected to Server...");
     return 0;
 }
 
-int closeCTCPSocket(bool enableMessages) {
+int closeCTCPSocket() {
     close(socket_desc);
     return 0;
 }
 
-int sendCTCPSocket(char *message, bool enableMessages) {
+int sendCTCPSocket(char *message, int enableMessages) {
     char *sendFailed = "\nTCPClient error: unable to send message to server...";
 
     int sendResult = sendto(
@@ -42,14 +42,14 @@ int sendCTCPSocket(char *message, bool enableMessages) {
 
     if(sendResult < 0) {
         // Sending Message Failed :(
-        printf(sendFailed);
+        if(enableMessages) printf(sendFailed);
         return -1;
     }
-    printf("\nTCPClient: Message sent successfully...");
+    if(enableMessages) printf("\nTCPClient: Message sent successfully...");
     return 0;
 }
 
-char* recvCTCPSocket(bool enableMessages) {
+char* recvCTCPSocket(int enableMessages) {
     
     socklen_t recvLen;
     char *recvFailed = "\nTCPClient error: unable to receive message from server...";
@@ -60,7 +60,8 @@ char* recvCTCPSocket(bool enableMessages) {
     
     int recvResult = recvfrom(socket_desc, recv_buf, sizeof recv_buf, 0, (struct sockaddr*)&server_addr, &recvLen);
     if(recvResult < 0) {
-        // printf("\nTCPClient error: unable to receive message from server...");
+        // Receiving failed
+        if(enableMessages) printf(recvFailed);
         return recvFailed;
     }
 

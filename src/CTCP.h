@@ -7,10 +7,13 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 
-int openCTCPSocket(char *ip, int port, bool enableMessages);
+int socket_desc;
+struct sockaddr_in server_addr;
 
-int closeCTCPSocket(bool enableMessages);
+int openCTCPSocket(char *ip, int port, int enableMessages);
 
-int sendCTCPSocket(char * message, bool enableMessages);
+int closeCTCPSocket();
 
-char* recvCTCPSocket(bool enableMessages);
+int sendCTCPSocket(char * message, int enableMessages);
+
+char* recvCTCPSocket(int enableMessages);
